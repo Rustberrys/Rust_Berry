@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>[SEA/TH] Rust Berry x3 | PVP Vanilla | Solo/Duo/Trio Only No Blueprint Wipe | Monthly Map Wipe</title>
+  <title>[SEA/TH] Rust Berry x3 | PVP Vanilla | Solo/Duo/Trio Only No Blueprint Wipe | Monthly Map Wipe </title>
   <style>
     html, body {
       margin: 0;
@@ -187,8 +187,6 @@
       width: 100%;
       border-collapse: collapse;
       color: white;
-      border-radius: 10px;
-      overflow: hidden;
     }
 
     #leaderboard th, #leaderboard td {
@@ -201,20 +199,9 @@
       background-color: rgba(255, 255, 255, 0.1);
     }
 
-    tr.gold {
-      background-color: rgba(255, 215, 0, 0.2);
-      box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
-    }
-
-    tr.silver {
-      background-color: rgba(192, 192, 192, 0.2);
-      box-shadow: 0 0 8px rgba(192, 192, 192, 0.3);
-    }
-
-    tr.bronze {
-      background-color: rgba(205, 127, 50, 0.2);
-      box-shadow: 0 0 8px rgba(205, 127, 50, 0.3);
-    }
+    tr.gold { background-color: rgba(255, 215, 0, 0.2); }
+    tr.silver { background-color: rgba(192, 192, 192, 0.2); }
+    tr.bronze { background-color: rgba(205, 127, 50, 0.2); }
   </style>
 </head>
 <body>
@@ -244,15 +231,9 @@
     </div>
 
     <div id="leaderboard">
-      <h2>🏆 10 อันดับผู้เล่นที่ Kill เยอะที่สุด</h2>
+      <h2></h2>
       <table>
-        <thead>
-          <tr>
-            <th>อันดับ</th>
-            <th>ชื่อผู้เล่น</th>
-            <th>Kills</th>
-          </tr>
-        </thead>
+        <thead></thead>
         <tbody id="leaderboard-body"></tbody>
       </table>
     </div>
@@ -275,14 +256,22 @@
         playerOnline: count => `👥 ผู้เล่นออนไลน์: ${count}`,
         playerError: "⚠️ ไม่สามารถโหลดจำนวนผู้เล่น",
         joinGame: "🎮 เข้าเกมเลย",
-        discord: "💬 เข้าร่วม Discord"
+        discord: "💬 เข้าร่วม Discord",
+        leaderboard: {
+          title: "🏆 10 อันดับผู้เล่นที่ Kill เยอะที่สุด",
+          headers: ["อันดับ", "ชื่อผู้เล่น", "Kills"]
+        }
       },
       en: {
         description: `🔥 Enter the battlefield of intense survival action\n🛠️ Gather resources 3x faster, build your base, strategize, and raid enemies\n🚫 No Pay-to-Win — everyone starts on equal ground\n👥 Team limit: Maximum 3 players (Solo/Duo/Trio)\n⚠️ No cheating, scripting, or third-party tools\n🤝 Respect all players and keep the game fun and fair\n🗺️ Wipe: Monthly (Map Only)\n🧬 Blueprint Wipe: Never\n🌐 Website: rustberrys.github.io/Rust-Berry\n💬 Discord: discord.gg/d4EecGy3yDX`,
         playerOnline: count => `👥 Players Online: ${count}`,
         playerError: "⚠️ Failed to load player count",
         joinGame: "🎮 Join Game",
-        discord: "💬 Join Discord"
+        discord: "💬 Join Discord",
+        leaderboard: {
+          title: "🏆 Top 10 Players with Most Kills",
+          headers: ["Rank", "Player Name", "Kills"]
+        }
       }
     };
 
@@ -295,13 +284,13 @@
       updatePlayerCount(lastPlayerCount);
       document.getElementById('join-btn').textContent = langData[lang].joinGame;
       document.getElementById('discord-btn').textContent = langData[lang].discord;
+      renderLeaderboardHeader();
     }
 
     function updatePlayerCount(count) {
       const text = count !== null
         ? langData[currentLang].playerOnline(count)
         : langData[currentLang].playerError;
-
       document.getElementById("player-count").textContent = text;
     }
 
@@ -335,7 +324,6 @@
       event.preventDefault();
       const steamLink = "steam://connect/183.88.252.91:28015";
       window.open(steamLink, "_self");
-
       setTimeout(() => {
         navigator.clipboard.writeText(steamLink).then(() => {
           document.getElementById("popup").style.display = "block";
@@ -345,6 +333,19 @@
 
     function closePopup() {
       document.getElementById("popup").style.display = "none";
+    }
+
+    function renderLeaderboardHeader() {
+      const headers = langData[currentLang].leaderboard.headers;
+      const thead = document.querySelector("#leaderboard thead");
+      thead.innerHTML = `
+        <tr>
+          <th>${headers[0]}</th>
+          <th>${headers[1]}</th>
+          <th>${headers[2]}</th>
+        </tr>
+      `;
+      document.querySelector("#leaderboard h2").textContent = langData[currentLang].leaderboard.title;
     }
 
     function loadLeaderboard() {
@@ -363,6 +364,8 @@
 
       const medals = ["🥇", "🥈", "🥉"];
       const tbody = document.getElementById("leaderboard-body");
+      tbody.innerHTML = "";
+
       topPlayers.forEach((player, index) => {
         const row = document.createElement("tr");
         if (index === 0) row.classList.add("gold");
