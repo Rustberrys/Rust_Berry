@@ -182,7 +182,26 @@
   </style>
 </head>
 <body>
-  <!-- body content unchanged -->
+  <video id="bg-video" autoplay loop muted playsinline>
+    <source src="https://www.dropbox.com/scl/fi/31e5y3tqv92a1mb63gaf4/rustbg2.mp4?rlkey=somqqj18nzw0ptss47c8ovz2v&raw=1" type="video/mp4" />
+  </video>
+  <div class="video-overlay"></div>
+  <div class="content">
+    <img class="logo" src="https://i.imgur.com/xljaPGd.png" alt="Server Logo" />
+    <h1>[SEA/TH] Rust Berry x3</h1>
+    <p id="ip-text" class="ip">IP Server: 183.88.252.91</p>
+    <p id="desc" class="description"></p>
+    <p class="online-count" id="online-count">Loading player count...</p>
+    <div class="button-row">
+      <a class="join-btn" id="join-btn" href="steam://connect/183.88.252.91">🎮 เข้าเกมเลย</a>
+      <a class="discord-btn" id="discord-btn" href="https://discord.gg/d4EecGy3yDX" target="_blank">💬 เข้าร่วม Discord</a>
+    </div>
+  </div>
+  <div class="top-right">
+    <button onclick="switchLang('th')">TH</button>
+    <button onclick="switchLang('en')">EN</button>
+    <button id="mute-btn" onclick="toggleMute()">🔇</button>
+  </div>
   <script>
     function switchLang(lang) {
       const desc = document.getElementById("desc");
@@ -229,9 +248,27 @@ No Blueprint Wipe | Monthly Map Wipe | Fair & Balanced
       window.history.replaceState(null, '', `${window.location.pathname}?${urlParams.toString()}`);
     }
 
+    function toggleMute() {
+      const video = document.getElementById("bg-video");
+      const muteBtn = document.getElementById("mute-btn");
+      video.muted = !video.muted;
+      muteBtn.textContent = video.muted ? "🔇" : "🔊";
+    }
+
     // ตรวจสอบภาษาเริ่มต้นจาก URL
     const initialLang = new URLSearchParams(window.location.search).get('lang') || 'th';
     switchLang(initialLang);
+
+    // ดึงจำนวนผู้เล่นออนไลน์จาก BattleMetrics
+    fetch("https://api.battlemetrics.com/servers/22091104")
+      .then(response => response.json())
+      .then(data => {
+        const onlineCount = data.data.attributes.players;
+        document.getElementById("online-count").textContent = `🔴 ผู้เล่นออนไลน์: ${onlineCount} คน`;
+      })
+      .catch(error => {
+        document.getElementById("online-count").textContent = "🔴 ไม่สามารถโหลดจำนวนผู้เล่นได้";
+      });
   </script>
 </body>
 </html>
