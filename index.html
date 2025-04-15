@@ -346,15 +346,20 @@
         { name: "PlayerTen", kills: 65 }
       ];
 
-      const tbody = document.getElementById("leaderboard-body");
-      topPlayers.forEach((player, index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>#${index + 1}</td>
-          <td>${player.name}</td>
-          <td>${player.kills}</td>
-        `;
-        tbody.appendChild(row);
+      const medals = ["🥇", "🥈", "🥉"];
+
+  const tbody = document.getElementById("leaderboard-body");
+  tbody.innerHTML = ""; // ล้างก่อนใส่ใหม่ทุกครั้ง
+
+  topPlayers.forEach((player, index) => {
+    const medal = medals[index] || `#${index + 1}`;
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${medal}</td>
+      <td>${player.name}</td>
+      <td>${player.kills}</td>
+    `;
+    tbody.appendChild(row);
       });
     }
 
