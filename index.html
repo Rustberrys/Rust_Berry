@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>[SEA/TH] Rust Berry x3 | PVP Vanilla | Solo/Duo/Trio Only No Blueprint Wipe | Monthly Map Wipe </title>
+  <title>[SEA/TH] Rust Berry x3 | PVP Vanilla | Solo/Duo/Trio Only No Blueprint Wipe | Monthly Map Wipe</title>
   <style>
     html, body {
       margin: 0;
@@ -187,6 +187,8 @@
       width: 100%;
       border-collapse: collapse;
       color: white;
+      border-radius: 10px;
+      overflow: hidden;
     }
 
     #leaderboard th, #leaderboard td {
@@ -197,6 +199,21 @@
 
     #leaderboard tr:hover {
       background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    tr.gold {
+      background-color: rgba(255, 215, 0, 0.2);
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+    }
+
+    tr.silver {
+      background-color: rgba(192, 192, 192, 0.2);
+      box-shadow: 0 0 8px rgba(192, 192, 192, 0.3);
+    }
+
+    tr.bronze {
+      background-color: rgba(205, 127, 50, 0.2);
+      box-shadow: 0 0 8px rgba(205, 127, 50, 0.3);
     }
   </style>
 </head>
@@ -236,9 +253,7 @@
             <th>Kills</th>
           </tr>
         </thead>
-        <tbody id="leaderboard-body">
-          <!-- เติมจาก JavaScript -->
-        </tbody>
+        <tbody id="leaderboard-body"></tbody>
       </table>
     </div>
   </div>
@@ -347,19 +362,19 @@
       ];
 
       const medals = ["🥇", "🥈", "🥉"];
-
-  const tbody = document.getElementById("leaderboard-body");
-  tbody.innerHTML = ""; // ล้างก่อนใส่ใหม่ทุกครั้ง
-
-  topPlayers.forEach((player, index) => {
-    const medal = medals[index] || `#${index + 1}`;
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${medal}</td>
-      <td>${player.name}</td>
-      <td>${player.kills}</td>
-    `;
-    tbody.appendChild(row);
+      const tbody = document.getElementById("leaderboard-body");
+      topPlayers.forEach((player, index) => {
+        const row = document.createElement("tr");
+        if (index === 0) row.classList.add("gold");
+        else if (index === 1) row.classList.add("silver");
+        else if (index === 2) row.classList.add("bronze");
+        const rankDisplay = medals[index] || `#${index + 1}`;
+        row.innerHTML = `
+          <td>${rankDisplay}</td>
+          <td>${player.name}</td>
+          <td>${player.kills}</td>
+        `;
+        tbody.appendChild(row);
       });
     }
 
