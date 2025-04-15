@@ -26,6 +26,10 @@
       object-fit: cover; z-index: -2;
     }
 
+    #bg-music {
+      display: none;
+    }
+
     .video-overlay {
       position: fixed;
       top: 0; left: 0;
@@ -71,15 +75,6 @@
       margin-bottom: 15px;
       font-size: 1rem;
       color: #4caf50;
-    }
-
-    #leaderboard {
-      margin-bottom: 30px;
-      font-size: 1rem;
-      background: rgba(255,255,255,0.08);
-      padding: 15px;
-      border-radius: 10px;
-      max-width: 400px;
     }
 
     .button-row {
@@ -144,6 +139,9 @@
   <video id="bg-video" autoplay loop muted playsinline>
     <source src="https://www.dropbox.com/scl/fi/31e5y3tqv92a1mb63gaf4/rustbg2.mp4?rlkey=somqqj18nzw0ptss47c8ovz2v&raw=1" type="video/mp4" />
   </video>
+  <audio id="bg-music" autoplay loop>
+    <source src="https://www.dropbox.com/scl/fi/tv0atlkby94kuiwrv7n39/Limp-Bizkit-Take-A-Look-Around-Instrumental-MI2-soundtrack-1.mp3?rlkey=nkiswzm6eenxwkmvwmw03ajhu&raw=1" type="audio/mpeg">
+  </audio>
   <div class="video-overlay"></div>
   <div class="content">
     <img class="logo" src="https://i.imgur.com/xljaPGd.png" alt="Server Logo" />
@@ -151,9 +149,6 @@
     <p id="ip-text" class="ip">IP Server: 183.88.252.91</p>
     <p id="desc" class="description"></p>
     <p class="online-count" id="online-count">Loading player count...</p>
-    <div id="leaderboard">อันดับ Kills สูงสุด:
-      <ul id="top-kills"></ul>
-    </div>
     <div class="button-row">
       <a class="join-btn" id="join-btn" href="steam://connect/183.88.252.91">🎮 เข้าเกมเลย</a>
       <a class="discord-btn" id="discord-btn" href="https://discord.gg/d4EecGy3yDX" target="_blank">💬 เข้าร่วม Discord</a>
@@ -167,12 +162,12 @@
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const video = document.getElementById("bg-video");
+      const audio = document.getElementById("bg-music");
       const muteBtn = document.getElementById("mute-btn");
       const joinBtn = document.getElementById("join-btn");
       const discordBtn = document.getElementById("discord-btn");
       const desc = document.getElementById("desc");
       const ipText = document.getElementById("ip-text");
-      const leaderboard = document.getElementById("top-kills");
 
       function switchLang(lang) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -215,13 +210,18 @@ No Blueprint Wipe | Monthly Map Wipe | Fair & Balanced
       }
 
       function toggleMute() {
-        video.muted = !video.muted;
-        muteBtn.textContent = video.muted ? "🔇" : "🔊";
+        const isMuted = video.muted;
+        video.muted = !isMuted;
+        audio.muted = !isMuted;
+        muteBtn.textContent = !isMuted ? "🔇" : "🔊";
       }
 
       muteBtn.addEventListener("click", toggleMute);
       const initialLang = new URLSearchParams(window.location.search).get('lang') || 'th';
       switchLang(initialLang);
+
+      audio.volume = 0.4;
+      audio.play().catch(e => console.warn("Audio autoplay blocked:", e));
 
       fetch("https://api.battlemetrics.com/servers/22091104")
         .then(response => response.json())
@@ -236,24 +236,6 @@ No Blueprint Wipe | Monthly Map Wipe | Fair & Balanced
           const text = lang === 'en' ? "🔴 Unable to load player count" : "🔴 ไม่สามารถโหลดจำนวนผู้เล่นได้";
           document.getElementById("online-count").textContent = text;
           console.warn("BattleMetrics error:", error);
-        });
-
-      fetch("https://rustberrys.github.io/api/topkills.json")
-        .then(res => res.json())
-        .then(players => {
-          const lang = new URLSearchParams(window.location.search).get('lang') || 'th';
-          document.getElementById("leaderboard").innerHTML = lang === 'en' ? "Top Kills Leaderboard:<ul id='top-kills'></ul>" : "อันดับ Kills สูงสุด:<ul id='top-kills'></ul>";
-          leaderboard.innerHTML = "";
-          players.slice(0, 10).forEach((p, i) => {
-            const li = document.createElement("li");
-            li.textContent = `#${i+1} ${p.name} - ${p.kills} kills`;
-            leaderboard.appendChild(li);
-          });
-        })
-        .catch(err => {
-          const lang = new URLSearchParams(window.location.search).get('lang') || 'th';
-          leaderboard.innerHTML = lang === 'en' ? "Unable to load leaderboard" : "ไม่สามารถโหลดอันดับได้";
-          console.warn("Top kills error:", err);
         });
     });
   </script>
