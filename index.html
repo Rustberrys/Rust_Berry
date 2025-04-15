@@ -183,15 +183,14 @@
 </head>
 <body>
   <!-- body content unchanged -->
-
   <script>
-    // ... unchanged ...
     function switchLang(lang) {
       const desc = document.getElementById("desc");
       const joinBtn = document.getElementById("join-btn");
       const discordBtn = document.getElementById("discord-btn");
       const ipText = document.getElementById("ip-text");
 
+      const urlParams = new URLSearchParams(window.location.search);
       if (lang === 'th') {
         desc.innerText = `Rust Berry x3 | PVP Vanilla | Solo/Duo/Trio Only
 ไม่มีการรี Blueprint | Wipe แผนที่รายเดือน | สนุกและยุติธรรม
@@ -208,6 +207,7 @@
         joinBtn.textContent = "🎮 เข้าเกมเลย";
         discordBtn.textContent = "💬 เข้าร่วม Discord";
         ipText.textContent = "IP Server: 183.88.252.91";
+        urlParams.set('lang', 'th');
       } else {
         desc.innerText = `Rust Berry x3 | PVP Vanilla | Solo/Duo/Trio Only
 No Blueprint Wipe | Monthly Map Wipe | Fair & Balanced
@@ -224,8 +224,14 @@ No Blueprint Wipe | Monthly Map Wipe | Fair & Balanced
         joinBtn.textContent = "🎮 Join Now";
         discordBtn.textContent = "💬 Join Discord";
         ipText.textContent = "Server IP: 183.88.252.91";
+        urlParams.set('lang', 'en');
       }
+      window.history.replaceState(null, '', `${window.location.pathname}?${urlParams.toString()}`);
     }
+
+    // ตรวจสอบภาษาเริ่มต้นจาก URL
+    const initialLang = new URLSearchParams(window.location.search).get('lang') || 'th';
+    switchLang(initialLang);
   </script>
 </body>
 </html>
