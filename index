@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[SEA/TH] Rust Berry x3 | PVP Vanilla | Solo/Duo/Trio</title>
+
+  <!-- Meta สำหรับ Discord และ SEO -->
+  <meta name="description" content="Rust Berry x3 | PVP Vanilla | Solo/Duo/Trio Only | No BP Wipe / Fair & Balanced" />
+  <meta property="og:url" content="https://discord.gg/d4EecGy3yDX" />
+  <meta property="og:title" content="Rust Berry x3 | PVP Vanilla" />
+  <meta property="og:description" content="No BP Wipe / Monthly Map Wipe / Team Limit 3 🔫 เข้าร่วมความมันส์ของ Rust PVP" />
+  <meta property="og:image" content="https://i.imgur.com/xljaPGd.png" />
+
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: white; overflow: hidden;
+    }
+
+    #bg-video {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      object-fit: cover; z-index: -2;
+    }
+
+    .video-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.8); z-index: -1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 20px;
+    }
+
+    .logo {
+      width: 280px; max-width: 80vw;
+      margin-bottom: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin: 10px 0; color: yellow;
+    }
+
+    .ip {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+
+    .description {
+      max-width: 600px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    .online-count {
+      margin-bottom: 30px;
+      font-size: 1rem;
+      color: #4caf50;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .discord-btn, .join-btn {
+      padding: 12px 24px;
+      font-weight: bold;
+      color: white; text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    .discord-btn {
+      background-color: #5865F2;
+    }
+
+    .discord-btn:hover {
+      background-color: #4752C4;
+    }
+
+    .join-btn {
+      background-color: #ff9933;
+    }
+
+    .join-btn:hover {
+      background-color: #e6831f;
+    }
+
+    .top-right {
+      position: absolute;
+      top: 20px; right: 20px;
+      display: flex; gap: 10px;
+      z-index: 3;
+    }
+
+    .top-right button {
+      padding: 6px 12px;
+      border: none; border-radius: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white; cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .top-right button:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    #mute-btn {
+      background: rgba(255, 0, 0, 0.6);
+    }
+
+    #mute-btn:hover {
+      background: rgba(255, 0, 0, 0.8);
+    }
+
+    .server-info {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 700px;
+      margin-top: 30px;
+      font-size: 0.95rem;
+    }
+
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.9);
+      padding: 20px;
+      border-radius: 12px;
+      z-index: 10;
+      text-align: center;
+      max-width: 90vw;
+      display: none;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      color: white;
+      font-size: 20px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #popup-link-text {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #ff9933;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    #popup-link-text:hover {
+      background: #e6831f;
+    }
+  </style>
+</head>
+<body>
+  <video id="bg-video" autoplay muted loop playsinline>
+    <source src="https://www.dropbox.com/scl/fi/py1ws1yr9i81stuillwfh/VDO_RUST.mp4?rlkey=hjy0i67d4ei6in3hyl2dq17ve&raw=1" type="video/mp4">
+  </video>
+  <div class="video-overlay"></div>
+
+  <div class="top-right">
+    <button onclick="switchLang('th')">ไทย</button>
+    <button onclick="switchLang('en')">EN</button>
+    <button id="mute-btn" onclick="toggleMute()">🔊 ปิดเสียง</button>
+  </div>
+
+  <div class="content">
+    <img class="logo" src="https://i.imgur.com/xljaPGd.png" alt="Rust Server Logo" />
+    <h1>[SEA/TH] Rust Berry x3 | PVP Vanilla</h1>
+    <div class="ip" id="ip-text">IP Server: 183.88.252.91</div>
+    <div class="description" id="desc"></div>
+    <div class="online-count" id="player-count">Loading...</div>
+    <div class="button-row">
+      <a class="join-btn" id="join-btn" href="#" onclick="tryJoinGame(event)">🎮 เข้าเกมเลย</a>
+      <a class="discord-btn" id="discord-btn" href="https://discord.gg/d4EecGy3yDX" target="_blank">💬 เข้าร่วม Discord</a>
+    </div>
+    <div class="server-info">... (unchanged) ...</div>
+  </div>
+
+  <div id="popup" class="popup">
+    <button class="close-btn" onclick="closePopup()">❌</button>
+    <p id="popup-message"></p>
+    <a id="popup-link-text" href="steam://connect/183.88.252.91:28015" target="_blank">คลิกที่นี่เพื่อพยายามเชื่อมต่ออีกครั้ง</a>
+  </div>
+
+  <audio id="bg-music" autoplay loop>
+    <source src="https://www.dropbox.com/scl/fi/xrjs4chk4cf2o87hzo40d/Limp-Bizkit-Take-A-Look-Around-Instrumental-MI2-soundtrack.mp3?rlkey=msym0rq53elozbx4wpnt4axlo&raw=1" type="audio/mpeg" />
+  </audio>
+
+  <script>
+    const bgMusic = document.getElementById("bg-music");
+    const muteBtn = document.getElementById("mute-btn");
+    let isMuted = true;
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      bgMusic.muted = isMuted;
+      muteBtn.textContent = isMuted ? "🔇 เปิดเสียง" : "🔊 ปิดเสียง";
+    }
+
+    function switchLang(lang) {
+      const desc = document.getElementById("desc");
+      const joinBtn = document.getElementById("join-btn");
+      const discordBtn = document.getElementById("discord-btn");
+      const ipText = document.getElementById("ip-text");
+
+      if (lang === 'th') {
+        desc.innerText = `Rust Berry x3 | PVP Vanilla | Solo/Duo/Trio Only\nไม่มีการรี Blueprint | Wipe แผนที่รายเดือน | สนุกและยุติธรรม\nเข้าสู่สมรภูมิเดือดในโลกแห่งการเอาตัวรอด\nเก็บทรัพยากรเร็วขึ้น 3 เท่า สร้างฐาน วางแผน และบุกศัตรู\nห้ามโกง, ห้ามใช้โปรแกรมช่วย, เล่นสนุกแบบแฟร์ๆ`;
+        joinBtn.textContent = "🎮 เข้าเกมเลย";
+        discordBtn.textContent = "💬 เข้าร่วม Discord";
+        ipText.textContent = "IP Server: 183.88.252.91";
+      } else {
+        desc.innerText = `Rust Berry x3 | PVP Vanilla | Solo/Duo/Trio Only\nNo Blueprint Wipe | Monthly Map Wipe | Fair & Balanced\n🔥 Enter the battlefield of intense survival action\n🛠️ Gather resources 3x faster, build your base, strategize, and raid enemies\n🚫 No Pay-to-Win — everyone starts on equal ground\n👥 Team limit: Maximum 3 players (Solo/Duo/Trio)\n⚠️ No cheating, scripting, or third-party tools\n🤝 Respect all players and keep the game fun and fair\n🗺️ Wipe: Monthly (Map Only)\n🧠 Blueprint Wipe: Never\n🌐 Website: rustberrys.github.io/Rust-BerryX3\n💬 Discord: discord.gg/d4EecGy3yDX`;
+        joinBtn.textContent = "🎮 Join Now";
+        discordBtn.textContent = "💬 Join Discord";
+        ipText.textContent = "Server IP: 183.88.252.91";
+      }
+    }
+
+    function tryJoinGame(event) {
+      event.preventDefault();
+      const popup = document.getElementById("popup");
+      const msg = document.getElementById("popup-message");
+      const link = document.getElementById("popup-link-text");
+      msg.innerText = "หากเกมไม่เปิดอัตโนมัติ โปรดคลิกที่ปุ่มด้านล่างเพื่อเข้าร่วมผ่าน Steam.";
+      popup.style.display = "block";
+    }
+
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+    }
+
+    async function fetchPlayerCount() {
+      try {
+        const res = await fetch("https://api.battlemetrics.com/servers/19406340");
+        const data = await res.json();
+        const players = data.data.attributes.players;
+        document.getElementById("player-count").innerText = `🟢 มีผู้เล่นออนไลน์ ${players} คน`;
+      } catch {
+        document.getElementById("player-count").innerText = "ไม่สามารถโหลดจำนวนผู้เล่นได้";
+      }
+    }
+
+    fetchPlayerCount();
+    switchLang('th');
+  </script>
+</body>
+</html>
