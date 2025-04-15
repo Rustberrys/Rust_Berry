@@ -348,40 +348,76 @@
       document.querySelector("#leaderboard h2").textContent = langData[currentLang].leaderboard.title;
     }
 
-    function loadLeaderboard() {
-      const topPlayers = [
-        { name: "PlayerOne", kills: 120 },
-        { name: "PlayerTwo", kills: 110 },
-        { name: "PlayerThree", kills: 98 },
-        { name: "PlayerFour", kills: 93 },
-        { name: "PlayerFive", kills: 87 },
-        { name: "PlayerSix", kills: 80 },
-        { name: "PlayerSeven", kills: 76 },
-        { name: "PlayerEight", kills: 72 },
-        { name: "PlayerNine", kills: 68 },
-        { name: "PlayerTen", kills: 65 }
-      ];
+    function showLeaderboardErrorPopup() {
+    const popup = document.getElementById("popup");
+    popup.querySelector("p").textContent = currentLang === 'th'
+      ? "⚠️ ไม่สามารถโหลดอันดับผู้เล่นได้ หรือไม่มีข้อมูลในขณะนี้"
+      : "⚠️ Failed to load leaderboard or no data available";
+    popup.querySelector("a").style.display = "none";
+    popup.style.display = "block";
+  }
 
-      const medals = ["🥇", "🥈", "🥉"];
+  function loadLeaderboard() {
+  fetch("http://localhost:3000/api/kills")
+    .then(res => res.json())
+    .then(topPlayers => {
       const tbody = document.getElementById("leaderboard-body");
       tbody.innerHTML = "";
 
-      topPlayers.forEach((player, index) => {
+      if (!Array.isArray(topPlayers) || topPlayers.length === 0) {
+        showLeaderboardErrorPopup();
+        return;
+      }
+
+      const medals = ["🥇", "🥈", "🥉"];
+      for (let i = 0; i < 10; i++) {
+        const player = topPlayers[i];
         const row = document.createElement("tr");
-        if (index === 0) row.classList.add("gold");
-        else if (index === 1) row.classList.add("silver");
-        else if (index === 2) row.classList.add("bronze");
-        const rankDisplay = medals[index] || `#${index + 1}`;
+
+        if (i === 0) row.classList.add("gold");
+        else if (i === 1) row.classList.add("silver");
+        else if (i === 2) row.classList.add("bronze");
+
+        const rankDisplay = medals[i] || `#${i + 1}`;
+        const name = player?.name || "--";
+        const kills = player?.kills?.toString() || "--";
+
         row.innerHTML = `
           <td>${rankDisplay}</td>
-          <td>${player.name}</td>
-          <td>${player.kills}</td>
+          <td>${name}</td>
+          <td>${kills}</td>
         `;
         tbody.appendChild(row);
-      });
-    }
+      }
+    })
+    .catch(() => {
+      // ถ้าโหลดข้อมูลล้มเหลว
+      showLeaderboardErrorPopup();
 
-    switchLang('th');
+      const tbody = document.getElementById("leaderboard-body");
+      tbody.innerHTML = "";
+
+      const medals = ["🥇", "🥈", "🥉"];
+      for (let i = 0; i < 10; i++) {
+        const row = document.createElement("tr");
+
+        if (i === 0) row.classList.add("gold");
+        else if (i === 1) row.classList.add("silver");
+        else if (i === 2) row.classList.add("bronze");
+
+        const rankDisplay = medals[i] || `#${i + 1}`;
+        row.innerHTML = `
+          <td>${rankDisplay}</td>
+          <td>--</td>
+          <td>--</td>
+        `;
+        tbody.appendChild(row);
+      }
+    });
+}
+
+
+  switchLang('th');
     loadLeaderboard();
   </script>
 </body>
