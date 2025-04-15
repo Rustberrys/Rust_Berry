@@ -11,7 +11,7 @@
       height: 100%;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: white;
-      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     #bg-video {
@@ -41,9 +41,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: center;
       text-align: center;
-      padding: 40px 20px;
+      padding: 20px;
     }
 
     .logo {
@@ -190,8 +190,8 @@
     <div class="online-count" id="player-count">Loading...</div>
 
     <div class="button-row">
-      <a class="join-btn" href="#" onclick="tryJoinGame(event)">🎮 เข้าเกมเลย</a>
-      <a class="discord-btn" href="https://discord.gg/d4EecGy3dX" target="_blank">💬 เข้าร่วม Discord</a>
+      <a id="join-btn" class="join-btn" href="#" onclick="tryJoinGame(event)">🎮 เข้าเกมเลย</a>
+      <a id="discord-btn" class="discord-btn" href="https://discord.gg/d4EecGy3dX" target="_blank">💬 เข้าร่วม Discord</a>
     </div>
   </div>
 
@@ -210,12 +210,16 @@
       th: {
         description: `🔥 เข้าสู่สนามรบแห่งการเอาชีวิตรอด\n🛠️ เก็บทรัพยากรเร็วขึ้น 3 เท่า สร้างฐาน วางแผน และบุกโจมตีศัตรู\n🚫 ไม่มีระบบ Pay-to-Win — ทุกคนเริ่มต้นอย่างเท่าเทียม\n👥 จำกัดทีม: สูงสุด 3 คน (Solo/Duo/Trio)\n⚠️ ห้ามโกง ใช้สคริปต์ หรือโปรแกรมช่วยเล่นใดๆ\n🤝 เคารพผู้อื่นและเล่นอย่างสนุกและยุติธรรม\n🗺️ Wipe: รายเดือน (เฉพาะแผนที่)\n🧠 Blueprint Wipe: ไม่มีการลบ\n🌐 เว็บไซต์: rustberrys.github.io/Rust-BerryX3\n💬 Discord: discord.gg/d4EecGy3yDX`,
         playerOnline: count => `👥 ผู้เล่นออนไลน์: ${count}`,
-        playerError: "⚠️ ไม่สามารถโหลดจำนวนผู้เล่น"
+        playerError: "⚠️ ไม่สามารถโหลดจำนวนผู้เล่น",
+        joinGame: "🎮 เข้าเกมเลย",
+        discord: "💬 เข้าร่วม Discord"
       },
       en: {
         description: `🔥 Enter the battlefield of intense survival action\n🛠️ Gather resources 3x faster, build your base, strategize, and raid enemies\n🚫 No Pay-to-Win — everyone starts on equal ground\n👥 Team limit: Maximum 3 players (Solo/Duo/Trio)\n⚠️ No cheating, scripting, or third-party tools\n🤝 Respect all players and keep the game fun and fair\n🗺️ Wipe: Monthly (Map Only)\n🧠 Blueprint Wipe: Never\n🌐 Website: rustberrys.github.io/Rust-BerryX3\n💬 Discord: discord.gg/d4EecGy3yDX`,
         playerOnline: count => `👥 Players Online: ${count}`,
-        playerError: "⚠️ Failed to load player count"
+        playerError: "⚠️ Failed to load player count",
+        joinGame: "🎮 Join Game",
+        discord: "💬 Join Discord"
       }
     };
 
@@ -226,6 +230,8 @@
       currentLang = lang;
       document.getElementById('desc').innerHTML = langData[lang].description.replace(/\n/g, "<br>");
       updatePlayerCount(lastPlayerCount);
+      document.getElementById('join-btn').textContent = langData[lang].joinGame;
+      document.getElementById('discord-btn').textContent = langData[lang].discord;
     }
 
     function updatePlayerCount(count) {
