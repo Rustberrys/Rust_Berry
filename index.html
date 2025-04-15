@@ -68,9 +68,18 @@
     }
 
     .online-count {
-      margin-bottom: 30px;
+      margin-bottom: 15px;
       font-size: 1rem;
       color: #4caf50;
+    }
+
+    #leaderboard {
+      margin-bottom: 30px;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.08);
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 400px;
     }
 
     .button-row {
@@ -129,56 +138,6 @@
     #mute-btn:hover {
       background: rgba(255, 0, 0, 0.8);
     }
-
-    .server-info {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 20px;
-      border-radius: 12px;
-      max-width: 700px;
-      margin-top: 30px;
-      font-size: 0.95rem;
-    }
-
-    .popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.9);
-      padding: 20px;
-      border-radius: 12px;
-      z-index: 10;
-      text-align: center;
-      max-width: 90vw;
-      display: none;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: none;
-      color: white;
-      font-size: 20px;
-      border: none;
-      cursor: pointer;
-    }
-
-    #popup-link-text {
-      display: inline-block;
-      margin-top: 15px;
-      padding: 10px 20px;
-      background: #ff9933;
-      color: white;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: background 0.3s ease;
-    }
-
-    #popup-link-text:hover {
-      background: #e6831f;
-    }
   </style>
 </head>
 <body>
@@ -192,6 +151,9 @@
     <p id="ip-text" class="ip">IP Server: 183.88.252.91</p>
     <p id="desc" class="description"></p>
     <p class="online-count" id="online-count">Loading player count...</p>
+    <div id="leaderboard">อันดับ Kills สูงสุด:
+      <ul id="top-kills"></ul>
+    </div>
     <div class="button-row">
       <a class="join-btn" id="join-btn" href="steam://connect/183.88.252.91">🎮 เข้าเกมเลย</a>
       <a class="discord-btn" id="discord-btn" href="https://discord.gg/d4EecGy3yDX" target="_blank">💬 เข้าร่วม Discord</a>
@@ -210,6 +172,7 @@
       const discordBtn = document.getElementById("discord-btn");
       const desc = document.getElementById("desc");
       const ipText = document.getElementById("ip-text");
+      const leaderboard = document.getElementById("top-kills");
 
       function switchLang(lang) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -257,21 +220,40 @@ No Blueprint Wipe | Monthly Map Wipe | Fair & Balanced
       }
 
       muteBtn.addEventListener("click", toggleMute);
-
-      // ตรวจสอบภาษาเริ่มต้นจาก URL
       const initialLang = new URLSearchParams(window.location.search).get('lang') || 'th';
       switchLang(initialLang);
 
-      // ดึงจำนวนผู้เล่นออนไลน์จาก BattleMetrics
       fetch("https://api.battlemetrics.com/servers/22091104")
         .then(response => response.json())
         .then(data => {
           const onlineCount = data.data.attributes.players;
-          document.getElementById("online-count").textContent = `🔴 ผู้เล่นออนไลน์: ${onlineCount} คน`;
+          const lang = new URLSearchParams(window.location.search).get('lang') || 'th';
+          const text = lang === 'en' ? `🔴 Online Players: ${onlineCount}` : `🔴 ผู้เล่นออนไลน์: ${onlineCount} คน`;
+          document.getElementById("online-count").textContent = text;
         })
         .catch(error => {
-          document.getElementById("online-count").textContent = "🔴 ไม่สามารถโหลดจำนวนผู้เล่นได้";
+          const lang = new URLSearchParams(window.location.search).get('lang') || 'th';
+          const text = lang === 'en' ? "🔴 Unable to load player count" : "🔴 ไม่สามารถโหลดจำนวนผู้เล่นได้";
+          document.getElementById("online-count").textContent = text;
           console.warn("BattleMetrics error:", error);
+        });
+
+      fetch("https://rustberrys.github.io/api/topkills.json")
+        .then(res => res.json())
+        .then(players => {
+          const lang = new URLSearchParams(window.location.search).get('lang') || 'th';
+          document.getElementById("leaderboard").innerHTML = lang === 'en' ? "Top Kills Leaderboard:<ul id='top-kills'></ul>" : "อันดับ Kills สูงสุด:<ul id='top-kills'></ul>";
+          leaderboard.innerHTML = "";
+          players.slice(0, 10).forEach((p, i) => {
+            const li = document.createElement("li");
+            li.textContent = `#${i+1} ${p.name} - ${p.kills} kills`;
+            leaderboard.appendChild(li);
+          });
+        })
+        .catch(err => {
+          const lang = new URLSearchParams(window.location.search).get('lang') || 'th';
+          leaderboard.innerHTML = lang === 'en' ? "Unable to load leaderboard" : "ไม่สามารถโหลดอันดับได้";
+          console.warn("Top kills error:", err);
         });
     });
   </script>
