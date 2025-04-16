@@ -358,7 +358,7 @@
   }
 
   function loadLeaderboard() {
-  fetch("http://localhost:3000/api/kills")
+  fetch("http://192.168.1.145:3000/api/kills")
     .then(res => res.json())
     .then(topPlayers => {
       const tbody = document.getElementById("leaderboard-body");
