@@ -347,7 +347,6 @@
       `;
       document.querySelector("#leaderboard h2").textContent = langData[currentLang].leaderboard.title;
     }
-
     function loadLeaderboard() {
   fetch("http://192.168.1.145:3000/api/kills")
     .then(res => res.json())
@@ -355,17 +354,19 @@
       const tbody = document.getElementById("leaderboard-body");
       tbody.innerHTML = "";
 
-      // เปลี่ยนอ็อบเจ็กต์ให้เป็นอาร์เรย์เพื่อการแสดงผล
-      const sortedPlayers = Object.values(topPlayers).sort((a, b) => b.kills - a.kills);
+      // เปลี่ยนอ็อบเจ็กต์ให้เป็นอาร์เรย์และกรอง NPC ออก
+      const filteredPlayers = Object.values(topPlayers)
+        .filter(player => player.name !== "Scientist") // กรอง NPC ออก
+        .sort((a, b) => b.kills - a.kills); // เรียงลำดับจากจำนวนการฆ่ามากไปน้อย
 
-      if (sortedPlayers.length === 0) {
+      if (filteredPlayers.length === 0) {
         showLeaderboardErrorPopup();
         return;
       }
 
       const medals = ["🥇", "🥈", "🥉"];
       for (let i = 0; i < 10; i++) {
-        const player = sortedPlayers[i];
+        const player = filteredPlayers[i];
         const row = document.createElement("tr");
 
         if (i === 0) row.classList.add("gold");
@@ -409,6 +410,7 @@
       }
     });
 }
+
 
 
 
