@@ -250,168 +250,163 @@
   </audio>
 
   <script>
-    const langData = {
-      th: {
-        description: `🔥 เข้าสู่สนามรบแห่งการเอาชีวิตรอด\n🛠️ เก็บทรัพยากรเร็วขึ้น 3 เท่า สร้างฐาน วางแผน และบุกโจมตีศัตรู\n🚫 ไม่มีระบบ Pay-to-Win — ทุกคนเริ่มต้นอย่างเท่าเทียม\n👥 จำกัดทีม: สูงสุด 3 คน (Solo/Duo/Trio)\n⚠️ ห้ามโกง ใช้สคริปต์ หรือโปรแกรมช่วยเล่นใดๆ\n🤝 เคารพผู้อื่นและเล่นอย่างสนุกและยุติธรรม\n🗺️ Wipe: รายเดือน (เฉพาะแผนที่)\n🧬 Blueprint Wipe: ไม่มีการลบ\n🌐 เว็บไซต์: rustberrys.github.io/Rust-Berry\n💬 Discord: discord.gg/d4EecGy3yDX`,
-        playerOnline: count => `👥 ผู้เล่นออนไลน์: ${count}`,
-        playerError: "⚠️ ไม่สามารถโหลดจำนวนผู้เล่น",
-        joinGame: "🎮 เข้าเกมเลย",
-        discord: "💬 เข้าร่วม Discord",
-        leaderboard: {
-          title: "🏆 10 อันดับผู้เล่นที่ Kill เยอะที่สุด",
-          headers: ["อันดับ", "ชื่อผู้เล่น", "Kills"]
-        }
-      },
-      en: {
-        description: `🔥 Enter the battlefield of intense survival action\n🛠️ Gather resources 3x faster, build your base, strategize, and raid enemies\n🚫 No Pay-to-Win — everyone starts on equal ground\n👥 Team limit: Maximum 3 players (Solo/Duo/Trio)\n⚠️ No cheating, scripting, or third-party tools\n🤝 Respect all players and keep the game fun and fair\n🗺️ Wipe: Monthly (Map Only)\n🧬 Blueprint Wipe: Never\n🌐 Website: rustberrys.github.io/Rust-Berry\n💬 Discord: discord.gg/d4EecGy3yDX`,
-        playerOnline: count => `👥 Players Online: ${count}`,
-        playerError: "⚠️ Failed to load player count",
-        joinGame: "🎮 Join Game",
-        discord: "💬 Join Discord",
-        leaderboard: {
-          title: "🏆 Top 10 Players with Most Kills",
-          headers: ["Rank", "Player Name", "Kills"]
-        }
-      }
-    };
+const langData = {
+  th: {
+   description: `🔥 เข้าสู่สนามรบแห่งการเอาชีวิตรอด\n🛠️ เก็บทรัพยากรเร็วขึ้น 3 เท่า สร้างฐาน วางแผน และบุกโจมตีศัตรู\n🚫 ไม่มีระบบ Pay-to-Win — ทุกคนเริ่มต้นอย่างเท่าเทียม\n👥 จำกัดทีม: สูงสุด 3 คน (Solo/Duo/Trio)\n⚠️ ห้ามโกง ใช้สคริปต์ หรือโปรแกรมช่วยเล่นใดๆ\n🤝 เคารพผู้อื่นและเล่นอย่างสนุกและยุติธรรม\n🗺️ Wipe: รายเดือน (เฉพาะแผนที่)\n🧬 Blueprint Wipe: ไม่มีการลบ\n🌐 เว็บไซต์: rustberrys.github.io/Rust-Berry\n💬 Discord: discord.gg/d4EecGy3yDX`,
+   playerOnline: count => `👥 ผู้เล่นออนไลน์: ${count}`,
+   playerError: "⚠️ ไม่สามารถโหลดจำนวนผู้เล่น",
+   joinGame: "🎮 เข้าเกมเลย",
+   discord: "💬 เข้าร่วม Discord",
+   leaderboard: {
+    title: "🏆 10 อันดับผู้เล่นที่ Kill เยอะที่สุด",
+    headers: ["อันดับ", "ชื่อผู้เล่น", "Kills"],
+    error: "⚠️ ไม่สามารถโหลดข้อมูลอันดับผู้เล่นได้"
+   }
+  },
+  en: {
+   description: `🔥 Enter the battlefield of intense survival action\n🛠️ Gather resources 3x faster, build your base, strategize, and raid enemies\n🚫 No Pay-to-Win — everyone starts on equal ground\n👥 Team limit: Maximum 3 players (Solo/Duo/Trio)\n⚠️ No cheating, scripting, or third-party tools\n🤝 Respect all players and keep the game fun and fair\n🗺️ Wipe: Monthly (Map Only)\n🧬 Blueprint Wipe: Never\n🌐 Website: rustberrys.github.io/Rust-Berry\n💬 Discord: discord.gg/d4EecGy3yDX`,
+   playerOnline: count => `👥 Players Online: ${count}`,
+   playerError: "⚠️ Failed to load player count",
+   joinGame: "🎮 Join Game",
+   discord: "💬 Join Discord",
+   leaderboard: {
+    title: "🏆 Top 10 Players with Most Kills",
+    headers: ["Rank", "Player Name", "Kills"],
+    error: "⚠️ Failed to load leaderboard data"
+   }
+  }
+ };
 
-    let currentLang = 'th';
-    let lastPlayerCount = null;
+ let currentLang = 'th';
+ let lastPlayerCount = null;
+ const LEADERBOARD_UPDATE_INTERVAL = 300000; // กำหนดช่วงเวลาอัปเดต (5 นาที)
 
-    function switchLang(lang) {
-      currentLang = lang;
-      document.getElementById('desc').innerHTML = langData[lang].description.replace(/\n/g, "<br>");
-      updatePlayerCount(lastPlayerCount);
-      document.getElementById('join-btn').textContent = langData[lang].joinGame;
-      document.getElementById('discord-btn').textContent = langData[lang].discord;
-      renderLeaderboardHeader();
-    }
+ function switchLang(lang) {
+  currentLang = lang;
+  document.getElementById('desc').innerHTML = langData[lang].description.replace(/\n/g, "<br>");
+  updatePlayerCount(lastPlayerCount);
+  document.getElementById('join-btn').textContent = langData[lang].joinGame;
+  document.getElementById('discord-btn').textContent = langData[lang].discord;
+  renderLeaderboardHeader();
+  loadLeaderboard(); // เรียก loadLeaderboard() เมื่อเปลี่ยนภาษาด้วย
+ }
 
-    function updatePlayerCount(count) {
-      const text = count !== null
-        ? langData[currentLang].playerOnline(count)
-        : langData[currentLang].playerError;
-      document.getElementById("player-count").textContent = text;
-    }
+ function updatePlayerCount(count) {
+  const text = count !== null
+   ? langData[currentLang].playerOnline(count)
+   : langData[currentLang].playerError;
+  document.getElementById("player-count").textContent = text;
+ }
 
-    fetch("https://api.battlemetrics.com/servers/32598846")
-      .then(res => res.json())
-      .then(data => {
-        const count = data.data.attributes.players;
-        lastPlayerCount = count;
-        updatePlayerCount(count);
-      })
-      .catch(() => {
-        lastPlayerCount = null;
-        updatePlayerCount(null);
-      });
+ fetch("https://api.battlemetrics.com/servers/32598846")
+  .then(res => res.json())
+  .then(data => {
+   const count = data.data.attributes.players;
+   lastPlayerCount = count;
+   updatePlayerCount(count);
+  })
+  .catch(() => {
+   lastPlayerCount = null;
+   updatePlayerCount(null);
+  });
 
-    const audio = document.getElementById('bg-music');
-    const muteBtn = document.getElementById('mute-btn');
+ const audio = document.getElementById('bg-music');
+ const muteBtn = document.getElementById('mute-btn');
 
-    function toggleMute() {
-      audio.muted = !audio.muted;
-      muteBtn.textContent = audio.muted ? '🔇 เปิดเสียง' : '🔊 ปิดเสียง';
-    }
+ function toggleMute() {
+  audio.muted = !audio.muted;
+  muteBtn.textContent = audio.muted ? '🔇 เปิดเสียง' : '🔊 ปิดเสียง';
+ }
 
-    window.addEventListener('click', function enableAudio() {
-      audio.muted = false;
-      audio.play().catch(() => {});
-      window.removeEventListener('click', enableAudio);
-    });
+ window.addEventListener('click', function enableAudio() {
+  audio.muted = false;
+  audio.play().catch(() => {});
+  window.removeEventListener('click', enableAudio);
+ });
 
-    function tryJoinGame(event) {
-      event.preventDefault();
-      const steamLink = "steam://connect/183.88.252.91:28015";
-      window.open(steamLink, "_self");
-      setTimeout(() => {
-        navigator.clipboard.writeText(steamLink).then(() => {
-          document.getElementById("popup").style.display = "block";
-        });
-      }, 1000);
-    }
+ function tryJoinGame(event) {
+  event.preventDefault();
+  const steamLink = "steam://connect/183.88.252.91:28015";
+  window.open(steamLink, "_self");
+  setTimeout(() => {
+   navigator.clipboard.writeText(steamLink).then(() => {
+    document.getElementById("popup").style.display = "block";
+   });
+  }, 1000);
+ }
 
-    function closePopup() {
-      document.getElementById("popup").style.display = "none";
-    }
+ function closePopup() {
+  document.getElementById("popup").style.display = "none";
+ }
 
-    function renderLeaderboardHeader() {
-      const headers = langData[currentLang].leaderboard.headers;
-      const thead = document.querySelector("#leaderboard thead");
-      thead.innerHTML = `
-        <tr>
-          <th>${headers[0]}</th>
-          <th>${headers[1]}</th>
-          <th>${headers[2]}</th>
-        </tr>
-      `;
-      document.querySelector("#leaderboard h2").textContent = langData[currentLang].leaderboard.title;
-    }
-    function loadLeaderboard() {
+ function renderLeaderboardHeader() {
+  const headers = langData[currentLang].leaderboard.headers;
+  const thead = document.querySelector("#leaderboard thead");
+  thead.innerHTML = `
+  <tr>
+   <th>${headers[0]}</th>
+   <th>${headers[1]}</th>
+   <th>${headers[2]}</th>
+  </tr>
+ `;
+  document.querySelector("#leaderboard h2").textContent = langData[currentLang].leaderboard.title;
+ }
+
+ function loadLeaderboard() {
+  const tbody = document.getElementById("leaderboard-body");
+  tbody.innerHTML = "<tr><td colspan='3'>กำลังโหลด...</td></tr>";
+
   fetch("http://192.168.1.145:3000/api/kills")
-    .then(res => res.json())
-    .then(topPlayers => {
-      const tbody = document.getElementById("leaderboard-body");
-      tbody.innerHTML = "";
+   .then(response => {
+    if (!response.ok) {
+     throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+   })
+   .then(topPlayers => {
+    tbody.innerHTML = "";
 
-      // เปลี่ยนอ็อบเจ็กต์ให้เป็นอาร์เรย์และกรอง NPC ออก
-      const filteredPlayers = Object.values(topPlayers)
-        .filter(player => player.name !== "Scientist") // กรอง NPC ออก
-        .sort((a, b) => b.kills - a.kills); // เรียงลำดับจากจำนวนการฆ่ามากไปน้อย
+    // เปลี่ยนอ็อบเจ็กต์ topPlayers ให้เป็นอาร์เรย์ของอ็อบเจ็กต์ผู้เล่น
+    const playerList = Object.values(topPlayers)
+     .filter(player => player.name !== "Scientist" && player.name) // กรอง NPC และผู้เล่นที่ไม่มีชื่อ
+     .sort((a, b) => b.kills - a.kills)
+     .slice(0, 10);
 
-      if (filteredPlayers.length === 0) {
-        showLeaderboardErrorPopup();
-        return;
-      }
+    if (playerList.length === 0) {
+     tbody.innerHTML = `<tr><td colspan='3'>ไม่มีข้อมูลผู้เล่น</td></tr>`;
+     return;
+    }
 
-      const medals = ["🥇", "🥈", "🥉"];
-      for (let i = 0; i < 10; i++) {
-        const player = filteredPlayers[i];
-        const row = document.createElement("tr");
+    const medals = ["🥇", "🥈", "🥉"];
+    playerList.forEach((player, index) => {
+     const row = document.createElement("tr");
+     if (index === 0) row.classList.add("gold");
+     else if (index === 1) row.classList.add("silver");
+     else if (index === 2) row.classList.add("bronze");
 
-        if (i === 0) row.classList.add("gold");
-        else if (i === 1) row.classList.add("silver");
-        else if (i === 2) row.classList.add("bronze");
+     const rankDisplay = medals[index] || `#${index + 1}`;
+     const name = player.name || "--"; // เข้าถึงชื่อผู้เล่นจาก player.name โดยตรง
+     const kills = player.kills?.toString() || "--";
 
-        const rankDisplay = medals[i] || `#${i + 1}`;
-        const name = player?.name || "--";
-        const kills = player?.kills?.toString() || "--";
-
-        row.innerHTML = `
-          <td>${rankDisplay}</td>
-          <td>${name}</td>
-          <td>${kills}</td>
-        `;
-        tbody.appendChild(row);
-      }
-    })
-    .catch(() => {
-      // ถ้าโหลดข้อมูลล้มเหลว
-      showLeaderboardErrorPopup();
-
-      const tbody = document.getElementById("leaderboard-body");
-      tbody.innerHTML = "";
-
-      const medals = ["🥇", "🥈", "🥉"];
-      for (let i = 0; i < 10; i++) {
-        const row = document.createElement("tr");
-
-        if (i === 0) row.classList.add("gold");
-        else if (i === 1) row.classList.add("silver");
-        else if (i === 2) row.classList.add("bronze");
-
-        const rankDisplay = medals[i] || `#${i + 1}`;
-        row.innerHTML = `
-          <td>${rankDisplay}</td>
-          <td>--</td>
-          <td>--</td>
-        `;
-        tbody.appendChild(row);
-      }
+     row.innerHTML = `
+      <td>${rankDisplay}</td>
+      <td>${name}</td>
+      <td>${kills}</td>
+     `;
+     tbody.appendChild(row);
     });
-}
-  switchLang('th');
-    loadLeaderboard();
+   })
+   .catch(error => {
+    console.error("เกิดข้อผิดพลาดในการโหลด Leaderboard:", error);
+    tbody.innerHTML = `<tr style="color: red;"><td colspan='3'>${langData[currentLang].leaderboard.error}</td></tr>`;
+   });
+ }
+
+ switchLang('th');
+ loadLeaderboard(); // โหลดข้อมูลครั้งแรก
+
+ // ตั้งเวลาให้โหลดข้อมูลซ้ำทุกๆ LEADERBOARD_UPDATE_INTERVAL
+ setInterval(loadLeaderboard, LEADERBOARD_UPDATE_INTERVAL);    
   </script>
 </body>
 </html>
