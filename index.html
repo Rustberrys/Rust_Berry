@@ -356,7 +356,7 @@ const langData = {
   const tbody = document.getElementById("leaderboard-body");
   tbody.innerHTML = "<tr><td colspan='3'>กำลังโหลด...</td></tr>";
 
-  fetch("https://www.rust-berry-api.online/api/kills")
+  fetch("https://localhost:3001/api/kills")
    .then(response => {
     if (!response.ok) {
      throw new Error(`HTTP error! status: ${response.status}`);
